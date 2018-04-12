@@ -22,4 +22,4 @@ const userSchema = new Schema({
 // connect mongodb Error Handler
 userSchema.plugin(mongodbErrorHandler);
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);

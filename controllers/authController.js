@@ -5,7 +5,7 @@ exports.signup = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  const existingUser = await User.findOne({ email: email })
+  const existingUser = await User.findOne({ email: email });
 
   if (existingUser) {
     return res.status(422).send({
@@ -18,10 +18,9 @@ exports.signup = async (req, res, next) => {
     password: password
   }).save();
 
-  if(user){
+  if (user) {
     return res.status(201).send({
       success: true
-    })
+    });
   }
-
 };
