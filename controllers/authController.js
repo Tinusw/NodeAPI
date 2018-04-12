@@ -5,6 +5,22 @@ exports.signup = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
+  // Refactor this & add validation //
+
+  if (!email) {
+    return res.status(400).send({
+      error: `email must be supplied`
+    })
+  }
+
+  if (!password) {
+    return res.status(400).send({
+      error: `password must be supplied`
+    })
+  }
+
+  //
+
   const existingUser = await User.findOne({ email: email });
 
   if (existingUser) {
