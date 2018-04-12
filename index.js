@@ -9,6 +9,8 @@ mongoose.connection.on('error', (err) => {
   console.error(`OH NO → ${err.message}`);
 });
 
+require('./models/user');
+
 // Server setup
 const app = require('./app');
 const port = process.env.PORT || 3030;

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 // ensure mongoose uses native promises
 mongoose.Promise = global.Promise;
@@ -17,10 +17,9 @@ const userSchema = new Schema({
     trim: true,
     required: "Please use a valid email address"
   }
-})
+});
 
 // connect mongodb Error Handler
 userSchema.plugin(mongodbErrorHandler);
 
-
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model('User', userSchema);
