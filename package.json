@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive ./test",
+    "test": "mocha ./test --recursive",
     "test:watch": "npm run test -watch ",
     "dev": "nodemon index.js"
   },
