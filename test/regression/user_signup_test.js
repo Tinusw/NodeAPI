@@ -1,4 +1,3 @@
-process.env.DATABASE = "mongodb://localhost:27017/node-react-api-test";
 process.env.NODE_ENV = "test";
 
 const mongoose = require("mongoose");
@@ -10,6 +9,8 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const server = require("../../app");
 const should = chai.should();
+
+process.env.DATABASE = config.test.db
 
 chai.use(chaiHttp);
 
@@ -32,7 +33,7 @@ describe("User", () => {
     });
   });
 
-  describe("/POST user", () => {
+  describe("/POST signup", () => {
     it("should not create a user without a password", done => {
       let user = {
         email: "test@test.com"
@@ -146,6 +147,19 @@ describe("User", () => {
           done();
         });
       });
+
+      it('should be able to access root with auth token in header', done => {
+        chai
+          .request(server)
+          .get("/")
+          .set('authorization', token)
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a("object");
+            res.body.should.have.property("hi", "there");
+            done();
+          });
+      })
     });
   });
 });
