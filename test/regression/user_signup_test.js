@@ -30,8 +30,6 @@ describe("User", () => {
     });
   });
 
-  // Test Signuup /POST route
-
   describe("/POST user", () => {
     it("should not create a user without a password", done => {
       let user = {
@@ -105,7 +103,7 @@ describe("User", () => {
         });
     });
 
-    describe("new users password", () => {
+    describe("newly created user", () => {
       let user = {
         email: "test@test.com",
         password: "1234"

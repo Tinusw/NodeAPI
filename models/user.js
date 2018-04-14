@@ -44,7 +44,6 @@ userSchema.pre("save", function(next) {
   });
 });
 
-// connect mongodb Error Handler
 userSchema.plugin(mongodbErrorHandler);
 
 module.exports = mongoose.model("User", userSchema);
