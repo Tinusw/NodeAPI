@@ -35,7 +35,7 @@ exports.signup = async (req, res, next) => {
   }).save();
 
   if (user) {
-    return res.status(201).send({
+    return res.status(201).json({
       success: true
     });
   }
