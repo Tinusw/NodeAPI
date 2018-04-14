@@ -3,6 +3,8 @@ process.env.NODE_ENV = "test";
 
 const mongoose = require("mongoose");
 const User = require("../../models/user");
+const jwt = require("jwt-simple");
+const config = require("../../config");
 
 const chai = require("chai");
 const chaiHttp = require("chai-http");
@@ -63,23 +65,6 @@ describe("User", () => {
         });
     });
 
-    it("should create a user with email & password", done => {
-      let user = {
-        email: "test@test.com",
-        password: "1234"
-      };
-      chai
-        .request(server)
-        .post("/signup")
-        .send(user)
-        .end((err, res) => {
-          res.should.have.status(201);
-          res.body.should.be.a("object");
-          res.body.should.have.property("success");
-          done();
-        });
-    });
-
     it("should not create user if user already exists", done => {
       let user = {
         email: "test@test.com",
@@ -103,11 +88,35 @@ describe("User", () => {
         });
     });
 
+    describe("successfully creating a user", done => {
+      let user = {
+        email: "test@test.com",
+        password: "1234"
+      };
+
+      let token = ''
+
+      it("should return a token string", done => {
+        chai
+        .request(server)
+        .post("/signup")
+        .send(user)
+        .end((err, res) => {
+          res.should.have.status(201);
+          res.body.should.be.a("object");
+          token = res.body
+          done();
+        });
+      });
+    })
+
     describe("newly created user", () => {
       let user = {
         email: "test@test.com",
         password: "1234"
       };
+
+      let token = ''
 
       beforeEach(done => {
         chai
@@ -117,7 +126,7 @@ describe("User", () => {
           .end((err, res) => {
             res.should.have.status(201);
             res.body.should.be.a("object");
-            res.body.should.have.property("success");
+            token = res.body.token
             done();
           });
       });
@@ -126,6 +135,14 @@ describe("User", () => {
         User.findOne({ email: "test@test.com" }, function(err, record) {
           let savedPassword = record.password;
           savedPassword.should.not.be.equal(user.password);
+          done();
+        });
+      });
+
+      it('should reference user when token is decrypted', done => {
+        let decoded_token = jwt.decode(token, config.secret)
+        User.findOne({ email: user.email }, function(err, record) {
+          decoded_token.sub.should.equal(`${record._id}`);
           done();
         });
       });

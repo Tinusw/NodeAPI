@@ -1,5 +1,11 @@
-const mongoose = require("mongoose");
-const User = mongoose.model("User");
+const jwt = require("jwt-simple");
+const User = require("../models/user");
+const config = require("../config");
+
+function tokenForUser(user) {
+  const timestamp = new Date().getTime()
+  return jwt.encode({ sub: user.id, iat: timestamp }, config.secret);
+}
 
 exports.signup = async (req, res, next) => {
   const email = req.body.email;
@@ -10,13 +16,13 @@ exports.signup = async (req, res, next) => {
   if (!email) {
     return res.status(400).send({
       error: `email must be supplied`
-    })
+    });
   }
 
   if (!password) {
     return res.status(400).send({
       error: `password must be supplied`
-    })
+    });
   }
 
   //
@@ -36,7 +42,7 @@ exports.signup = async (req, res, next) => {
 
   if (user) {
     return res.status(201).json({
-      success: true
+      token: tokenForUser(user)
     });
   }
 };
