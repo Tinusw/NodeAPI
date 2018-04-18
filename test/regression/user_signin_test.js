@@ -20,10 +20,11 @@ describe("User", () => {
     mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
     mongoose.connection
       .once("open", () => {
+        User.remove({});
         done();
       })
       .on("error", err => {
-        console.error(`OH NO → ${err.message}`);
+        // console.error(`OH NO → ${err.message}`);
       });
   });
 
@@ -40,7 +41,7 @@ describe("User", () => {
       password: "1234"
     };
 
-    beforeEach(done => {
+    before(done => {
       User.create(
         {
           email: "test@test1.com",
@@ -70,15 +71,15 @@ describe("User", () => {
         });
     });
 
-    it("root is accessable with token", done => {
+    it("can access the protected path with auth token in header", done => {
       chai
         .request(server)
-        .get("/")
+        .get("/campaign/index")
         .set('authorization', token)
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.should.have.property("message", "there");
+          res.body.should.be.a("array");
+          res.body.should.have.lengthOf(3)
           done();
         });
     })

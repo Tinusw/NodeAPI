@@ -9,7 +9,8 @@ const cors = require('cors');
 
 // App setup
 app.use(cors());
-app.use(bodyParser.json({ type: "*/*" }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 if (app.get("env") === "development") {
   /* Development Error Handler - Prints stack trace */
